@@ -1,0 +1,24 @@
+seed: 42
+
+model:
+  input_dim: 784
+  hidden_dim: 256
+  output_dim: 10
+  dropout: 0.1
+
+optimizer:
+  lr: 1e-3
+  weight_decay: 0.0
+
+data:
+  dataset_name: 'CHEMBL3979_EC50.csv'
+  batch_size: 128
+  num_workers: 4
+
+trainer:
+  max_epochs: 10
+  accelerator: auto
+  devices: auto
+  precision: 32
+  gradient_clip_val: 1.0
+  log_every_n_steps: 25
