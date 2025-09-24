@@ -1,0 +1,10 @@
+notebooks/.DS_Store
+src/__pycache__
+src/nn/__pycache__
+src/chemoinformatics/__pycache__
+notebooks/lightning_logs
+notebooks/data
+src/.DS_Store
+__pycache__/config.cpython-312.pyc
+Data/dili.tab
+.DS_Store
