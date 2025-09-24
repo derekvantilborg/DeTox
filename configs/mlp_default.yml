@@ -12,7 +12,7 @@ optimizer:
 
 data:
   dataset_name: 'PPARy'
-  descriptor: 'ecfp4'
+  descriptor: 'ECFP4'
   batch_size: 128
   num_workers: 4
   splitting_seed: 1
