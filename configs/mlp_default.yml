@@ -15,6 +15,8 @@ data:
   descriptor: 'ecfp4'
   batch_size: 128
   num_workers: 4
+  splitting_seed: 1
+  splitting_ratios: [0.7, 0.1, 0.2]
 
 trainer:
   max_epochs: 200
