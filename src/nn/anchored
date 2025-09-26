@@ -98,7 +98,7 @@ class MLP(nn.Module):
             lin.reset_parameters()
         self.out.reset_parameters()
 
-    def forward(self, x: Tensor, y: Tensor = None) -> (Tensor, Tensor, Tensor):
+    def forward(self, x: Tensor, y: Tensor = None) -> tuple[Tensor, Tensor, Tensor]:
         """ Predict target classes from a molecular vector
 
         :param x: :math:`(N, H)`, input vector
@@ -188,7 +188,7 @@ class Ensemble(nn.Module):
         self.total_loss = None
         self.loss = None
 
-    def forward(self, x: Tensor, y: Tensor = None) -> (Tensor, Tensor, Tensor):
+    def forward(self, x: Tensor, y: Tensor = None) -> tuple[Tensor, Tensor, Tensor]:
         """ Forward pass over the whole ensemble
 
         :param x: :math:`(N, H)`, input tensor, where H is `mlp_input_dim`
@@ -216,7 +216,7 @@ class Ensemble(nn.Module):
         return logprobs_N_K_C, self.loss
 
 
-def anchored_loss(model: MLP, x: Tensor, y: Tensor = None) -> (Tensor, Tensor):
+def anchored_loss(model: MLP, x: Tensor, y: Tensor = None) -> tuple[Tensor, Tensor]:
     """ Compute anchored loss according to Pearce et al. (2018)
 
     :param model: MLP torch module
