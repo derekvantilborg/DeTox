@@ -27,6 +27,18 @@ class MLP(pl.LightningModule):
         loss = F.cross_entropy(logits, y)
         self.log("train/loss", loss, prog_bar=True)
         return loss
+    
+    def validation_step(self, batch, batch_idx):
+        x, y = batch
+        logits = self(x)
+        loss = F.cross_entropy(logits, y)
+        self.log("val/loss", loss, prog_bar=True)
+
+    def predict_step(self, batch, batch_idx, dataloader_idx=0):
+        x, y = batch
+        logits = self(x)
+        
+        return logits
 
     def configure_optimizers(self):
         opt_config = self.hparams['optimizer']

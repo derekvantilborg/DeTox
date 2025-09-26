@@ -19,7 +19,7 @@ data:
   splitting_ratios: [0.7, 0.1, 0.2]
 
 trainer:
-  max_epochs: 200
+  max_epochs: 20
   accelerator: auto
   devices: auto
   precision: 32

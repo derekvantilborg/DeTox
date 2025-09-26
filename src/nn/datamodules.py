@@ -31,9 +31,6 @@ class MoleculeDataModule(pl.LightningDataModule):
         # Create scaffold splits
         splits = create_scaffold_split(df, seed=1, frac=[0.7, 0.1, 0.2], entity='Drug')
 
-        for k in splits:
-            print(f"{k} set: {len(splits[k])} molecules")
-
         # Train set
         train_mols = smiles_to_mols(splits['train']['Drug'])
         if self.descriptor == 'ECFP4':
