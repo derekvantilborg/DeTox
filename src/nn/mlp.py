@@ -24,14 +24,16 @@ class MLP(pl.LightningModule):
     def training_step(self, batch, _):
         x, y = batch
         logits = self(x)
-        loss = F.cross_entropy(logits, y)
+        log_probs = F.log_softmax(logits, dim=1)
+        loss = F.nll_loss(log_probs, y)
         self.log("train/loss", loss, prog_bar=True)
         return loss
     
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
-        loss = F.cross_entropy(logits, y)
+        log_probs = F.log_softmax(logits, dim=1)
+        loss = F.nll_loss(log_probs, y)
         self.log("val/loss", loss, prog_bar=True)
 
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
