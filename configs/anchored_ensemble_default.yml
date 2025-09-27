@@ -1,0 +1,30 @@
+seed: 42
+
+model:
+  input_dim: 2048
+  hidden_dim: 256
+  output_dim: 2
+  n_layers: 2
+  anchored: true
+  l2_lambda: 1e-4
+  n_ensemble: 2
+
+optimizer:
+  lr: 1e-3
+  weight_decay: 0.0
+
+data:
+  dataset_name: 'PPARy'
+  descriptor: 'ECFP4'
+  batch_size: 128
+  num_workers: 4
+  splitting_seed: 1
+  splitting_ratios: [0.7, 0.1, 0.2]
+
+trainer:
+  max_epochs: 20
+  accelerator: auto
+  devices: auto
+  precision: 32
+  gradient_clip_val: 1.0
+  log_every_n_steps: 25
