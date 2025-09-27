@@ -228,7 +228,9 @@ def anchored_loss(model: MLP, x: Tensor, y: Tensor = None) -> tuple[Tensor, Tens
     loss_i = loss_func(x, y)
 
     if model.anchored:
-        l2_loss = 0
+        # Initialize l2_loss on the same device as the predictions
+        l2_loss = torch.tensor(0.0, device=x.device, dtype=x.dtype)
+        
         for p, p_a in zip(model.named_parameters(), model.named_buffers()):
             assert p_a[1].shape == p[1].shape
             l2_loss += model.l2_lambda * torch.mul(p[1] - p_a[1], p[1] - p_a[1]).sum()
