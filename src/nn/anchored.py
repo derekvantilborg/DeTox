@@ -86,12 +86,11 @@ class MLP(nn.Module):
         self.l2_lambda = mlp_l2_lambda
         self.anchored = mlp_anchored
         self.name = 'MLP'
-        self.device = device
 
         self.fc = torch.nn.ModuleList()
         for i in range(mlp_n_layers):
-            self.fc.append(AnchoredLinear(mlp_input_dim if i == 0 else mlp_hidden_dim, mlp_hidden_dim, device=self.device))
-        self.out = AnchoredLinear(mlp_hidden_dim, mlp_output_dim, device=self.device)
+            self.fc.append(AnchoredLinear(mlp_input_dim if i == 0 else mlp_hidden_dim, mlp_hidden_dim))
+        self.out = AnchoredLinear(mlp_hidden_dim, mlp_output_dim)
 
     def reset_parameters(self):
         for lin in self.fc:
@@ -135,17 +134,16 @@ class AnchoredLinear(nn.Module):
 
         self.in_features = in_features
         self.out_features = out_features
-        self.device = device
 
-        self.weight = Parameter(torch.empty((out_features, in_features), device=device, dtype=dtype))
+        self.weight = Parameter(torch.empty((out_features, in_features), dtype=dtype))
         if bias:
-            self.bias = Parameter(torch.empty(out_features, device=device, dtype=dtype))
+            self.bias = Parameter(torch.empty(out_features, dtype=dtype))
         else:
             self.register_parameter('bias', None)
         self.reset_parameters()
         # store the init weight/bias as a buffer
         self.register_buffer('anchor_weight', self.weight.clone().detach())
-        self.register_buffer('anchor_bias', self.bias.clone().detach())
+        self.register_buffer('anchor_bias', self.bias.clone().detach() if self.bias is not None else None)
 
     def reset_parameters(self) -> None:
         nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
@@ -176,13 +174,12 @@ class Ensemble(nn.Module):
                  mlp_n_ensemble: int = 10, device: str = None, **kwargs) -> None:
         super().__init__()
         self.name = 'Ensemble'
-        self.device = device
 
         self.mlps = nn.ModuleList()
         for i in range(mlp_n_ensemble):
             self.mlps.append(MLP(mlp_input_dim=mlp_input_dim, mlp_hidden_dim=mlp_hidden_dim,
                                  mlp_output_dim=mlp_output_dim, mlp_n_layers=mlp_n_layers,
-                                 seed=i, mlp_anchored=mlp_anchored, mlp_l2_lambda=mlp_l2_lambda, device=device))
+                                 seed=i, mlp_anchored=mlp_anchored, mlp_l2_lambda=mlp_l2_lambda))
 
         self.prediction_loss = None
         self.total_loss = None
@@ -198,7 +195,7 @@ class Ensemble(nn.Module):
         total loss averaged over the ensemble :math:`()`
         """
 
-        loss = torch.tensor([0], device=self.device, dtype=torch.float)
+        loss = torch.tensor(0.0, dtype=torch.float)
         logprobs = []
         loss_items = []
         for mlp_i in self.mlps:
